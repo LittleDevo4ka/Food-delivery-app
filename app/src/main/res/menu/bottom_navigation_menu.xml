@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mainFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_home_24"
+        android:title="Главная"/>
+    <item
+        android:id="@+id/searchFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_search_24"
+        android:title="Поиск"/>
+    <item
+        android:id="@+id/bagFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_bag_24"
+        android:title="Корзина"/>
+    <item
+        android:id="@+id/profileFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_profile_24"
+        android:title="Аккаунт"/>
+</menu>

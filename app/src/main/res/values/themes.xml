@@ -1,9 +1,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.FoodDeliveryApp" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.FoodDeliveryApp" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorSecondaryContainer">@color/white</item>
     </style>
 
     <style name="Theme.FoodDeliveryApp" parent="Base.Theme.FoodDeliveryApp" />
+
+    <style name="MyBottomAppBar" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemTextColor">@color/bottom_nav_text_color</item>
+        <item name="itemIconTint">@color/bottom_nav_icon_color</item>
+        <item name="itemHorizontalTranslationEnabled">false</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="itemRippleColor">@android:color/transparent</item>
+    </style>
+
 </resources>
