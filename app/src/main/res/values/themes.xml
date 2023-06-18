@@ -5,6 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorSecondaryContainer">@color/white</item>
+
     </style>
 
     <style name="Theme.FoodDeliveryApp" parent="Base.Theme.FoodDeliveryApp" />
@@ -16,6 +17,15 @@
         <item name="labelVisibilityMode">labeled</item>
         <item name="backgroundTint">@color/white</item>
         <item name="itemRippleColor">@android:color/transparent</item>
+    </style>
+
+
+    <style name="ProfileImageCardView" parent="Widget.Material3.CardView.Filled">
+        <item name="shapeAppearance">@style/ProfileImageShape</item>
+    </style>
+
+    <style name="ProfileImageShape" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerSize">100dp</item>
     </style>
 
 </resources>
