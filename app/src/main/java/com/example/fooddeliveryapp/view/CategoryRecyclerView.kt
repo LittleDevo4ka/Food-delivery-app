@@ -32,7 +32,6 @@ class CategoryRecyclerView(private val categoriesList: List<Category>,
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val categoryName: TextView = itemView.findViewById(R.id.category_name_card)
         val categoryImage: ImageView = itemView.findViewById(R.id.category_card_image)
-        val categoryButton: Button = itemView.findViewById(R.id.category_card_button)
     }
 
     override fun onCreateViewHolder(
@@ -49,19 +48,10 @@ class CategoryRecyclerView(private val categoriesList: List<Category>,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.categoryName.text = categoriesList[position].name
 
-        holder.categoryButton.setOnClickListener {
+        holder.categoryImage.setOnClickListener {
             mainListener.onItemClick(categoriesList[position])
         }
 
-        holder.categoryImage.setOnClickListener {
-            /*
-            val animation: Animation =
-                AnimationUtils.loadAnimation(context, R.anim.anim)
-            holder.categoryImage.startAnimation(animation)
-
-             */
-            //holder.categoryImage.background = ContextCompat.getDrawable(context, R.drawable.ripple)
-        }
 
         Glide.with(context).load(categoriesList[position].image_url)
             .into(holder.categoryImage)
