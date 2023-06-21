@@ -1,11 +1,16 @@
 package com.example.fooddeliveryapp.viewModel
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import com.example.fooddeliveryapp.model.Repository
+import com.example.fooddeliveryapp.model.dataClasses.CartItem
 import com.example.fooddeliveryapp.model.dataClasses.Category
 import com.example.fooddeliveryapp.model.dataClasses.Dish
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -32,8 +37,27 @@ class MainViewModel(application: Application) : AndroidViewModel(application), R
     private val selectedTagMutableFlow: MutableStateFlow<String?> = MutableStateFlow(null)
     val selectedTagStateFlow: StateFlow<String?> = selectedTagMutableFlow
 
+    private var selectedDish: Dish? = null
+
+    private val cartList: MutableList<CartItem>
+
+    private val gson = Gson()
+
+    private val sharedPreferences: SharedPreferences
+
     private var gettingCategories = false
     private var gettingDishes = false
+
+    init {
+        sharedPreferences = application.getSharedPreferences("Default",
+            Context.MODE_PRIVATE)
+        val jsonCartList = sharedPreferences.getString("cartList", "")
+        cartList = if (!jsonCartList.isNullOrEmpty()) {
+            gson.fromJson(jsonCartList, Array<CartItem>::class.java).toMutableList()
+        } else {
+            mutableListOf()
+        }
+    }
 
     fun getCategories() {
         if (gettingCategories) {
@@ -113,5 +137,39 @@ class MainViewModel(application: Application) : AndroidViewModel(application), R
 
     fun getTag(): String {
         return selectedTag
+    }
+
+    fun setDish(newDish: Dish) {
+        selectedDish = newDish
+    }
+
+    fun getDish(): Dish? {
+        return selectedDish
+    }
+
+    fun addToCard(id: Int) {
+        for (i in cartList.indices) {
+            if (cartList[i].id == id) {
+                cartList[i].amount++
+                sharedPreferences.edit().putString("cartList", gson.toJson(cartList)).apply()
+                return
+            }
+        }
+        cartList.add(CartItem(id, 1))
+        sharedPreferences.edit().putString("cartList", gson.toJson(cartList)).apply()
+        return
+    }
+
+    fun removeCardItem(id: Int) {
+        for (i in cartList.indices) {
+            if (cartList[i].id == id) {
+                cartList[i].amount--
+                return
+            }
+        }
+    }
+
+    fun soutCart() {
+        println("Result:\n" + gson.toJson(cartList))
     }
 }

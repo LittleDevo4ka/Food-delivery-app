@@ -102,6 +102,10 @@ class DishesFragment : Fragment(), OnItemClickListener {
     }
 
     override fun onItemClick(dish: Dish) {
+        viewModel.setDish(dish)
+
+        val frag = ProductFragment()
+        frag.show(childFragmentManager, "Something")
     }
 
     override fun onItemClick(tag: String) {
