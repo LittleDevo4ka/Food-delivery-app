@@ -56,20 +56,33 @@ class CartFragment : Fragment(), OnItemClickListener {
             .load(R.drawable.placeholder).apply(glideOptions)
             .into(binding.userProfileImageCart)
 
-        val myAdapter = CartRecyclerItem(viewModel , viewModel.getCartList(), this, requireContext())
+        val adapterList: MutableList<CartItem> = mutableListOf()
+        val myAdapter = CartRecyclerItem(viewModel , adapterList, this, requireContext())
         binding.cartRecyclerView.adapter = myAdapter
 
-        var summaryPrice = 0
-        val cartList = viewModel.getCartList()
-        for (i in cartList.indices) {
-            val tempDish = viewModel.getDishById(cartList[i].id)
-            if (tempDish != null) {
-                summaryPrice += tempDish.price
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.cartStateFlow.collect { cartList ->
+                    adapterList.clear()
+
+                    if (cartList != null) {
+                        adapterList.addAll(cartList)
+
+                        var summaryPrice = 0
+                        for (i in cartList.indices) {
+                            val tempDish = viewModel.getDishById(cartList[i].id)
+                            if (tempDish != null) {
+                                summaryPrice += (tempDish.price * cartList[i].amount)
+                            }
+                        }
+                        val numberFormat = NumberFormat.getNumberInstance(Locale("ru", "RU"))
+                        val formattedPrice = numberFormat.format(summaryPrice)
+                        binding.payButtonCart.text = "Оплатить ${formattedPrice} ₽"
+                    }
+                    myAdapter.notifyDataSetChanged()
+                }
             }
         }
-        val numberFormat = NumberFormat.getNumberInstance(Locale("ru", "RU"))
-        val formattedPrice = numberFormat.format(summaryPrice)
-        binding.payButtonCart.text = "Оплатить ${formattedPrice} ₽"
 
         val calendar = Calendar.getInstance()
         binding.currentDateCart.text = dateFormat.format(calendar.time)

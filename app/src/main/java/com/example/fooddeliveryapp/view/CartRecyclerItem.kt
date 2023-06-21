@@ -64,14 +64,10 @@ class CartRecyclerItem(private val viewModel: MainViewModel,
 
         holder.plusButton.setOnClickListener {
             viewModel.addToCard(cartList[position].id)
-            val tempAmount = holder.cartAmount.text.toString().toInt() + 1
-            holder.cartAmount.text = tempAmount.toString()
         }
 
         holder.minusButton.setOnClickListener {
             viewModel.removeCardItem(cartList[position].id)
-            val tempAmount = holder.cartAmount.text.toString().toInt() - 1
-            holder.cartAmount.text = tempAmount.toString()
         }
 
 

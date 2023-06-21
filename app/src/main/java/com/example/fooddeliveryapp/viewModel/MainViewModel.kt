@@ -40,6 +40,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application), R
     private var selectedDish: Dish? = null
 
     private val cartList: MutableList<CartItem>
+    private val cartMutableFlow: MutableStateFlow<List<CartItem>?> = MutableStateFlow(null)
+    val cartStateFlow: StateFlow<List<CartItem>?> = cartMutableFlow
 
     private val gson = Gson()
 
@@ -57,6 +59,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), R
         } else {
             mutableListOf()
         }
+        cartMutableFlow.value = cartList.toList()
 
         getDishes()
     }
@@ -152,21 +155,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application), R
     }
 
     fun addToCard(id: Int) {
+        cartMutableFlow.value = null
         for (i in cartList.indices) {
             if (cartList[i].id == id) {
                 cartList[i].amount++
                 sharedPreferences.edit().putString("cartList", gson.toJson(cartList)).apply()
+                cartMutableFlow.value = cartList.toList()
                 return
             }
         }
         cartList.add(CartItem(id, 1))
         sharedPreferences.edit().putString("cartList", gson.toJson(cartList)).apply()
+        cartMutableFlow.value = cartList.toList()
         return
     }
 
 
 
     fun removeCardItem(id: Int) {
+        cartMutableFlow.value = null
         for (i in cartList.indices) {
             if (cartList[i].id == id) {
                 if (cartList[i].amount == 1) {
@@ -176,6 +183,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), R
                     cartList[i].amount--
                     sharedPreferences.edit().putString("cartList", gson.toJson(cartList)).apply()
                 }
+                cartMutableFlow.value = cartList.toList()
                 return
             }
         }
@@ -188,13 +196,5 @@ class MainViewModel(application: Application) : AndroidViewModel(application), R
             }
         }
         return null
-    }
-
-    fun soutCart() {
-        println("Result:\n" + gson.toJson(cartList))
-    }
-
-    fun getCartList(): MutableList<CartItem> {
-        return cartList
     }
 }

@@ -61,7 +61,6 @@ class ProductFragment : DialogFragment() {
 
             binding.addProductCartButton.setOnClickListener {
                 viewModel.addToCard(dish.id)
-                viewModel.soutCart()
             }
 
             Glide.with(requireContext()).load(dish.image_url)
