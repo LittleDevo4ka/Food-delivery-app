@@ -96,6 +96,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application), R
         allDishesList.clear()
         dishesList.clear()
         dishesMutableFlow.value = null
+        dishesTagsList.clear()
+        dishesTagsMutableFlow.value = null
 
         repository.getDishes()
     }

@@ -28,6 +28,8 @@ class DishesFragment : Fragment(), OnItemClickListener {
     private lateinit var binding: FragmentDishesBinding
     private lateinit var viewModel: MainViewModel
 
+    private var dishesReceived = false
+    private var dishesTagsReceived = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +45,8 @@ class DishesFragment : Fragment(), OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.dishesSwipeRefreshLayout.isRefreshing = true
 
         val imageSize = ceil(44 * resources.displayMetrics.density).toInt()
 
@@ -72,13 +76,20 @@ class DishesFragment : Fragment(), OnItemClickListener {
                     }
 
                     dishesAdapter.notifyDataSetChanged()
+
+                    binding.dishesSwipeRefreshLayout.isRefreshing = false
+                    if (dishesTagsReceived) {
+                        binding.dishesSwipeRefreshLayout.isRefreshing = false
+                    } else {
+                        dishesReceived = true
+                    }
                 }
             }
         }
 
         val dishesTagsList: MutableList<String> = mutableListOf()
         val dishesTagsAdapter = DishesTagsRecyclerItem(dishesTagsList, this,
-            requireContext(), viewModel.getTag())
+            requireContext(), viewModel)
         binding.dishesTagsRecyclerView.adapter = dishesTagsAdapter
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -91,9 +102,26 @@ class DishesFragment : Fragment(), OnItemClickListener {
                     }
 
                     dishesTagsAdapter.notifyDataSetChanged()
+
+                    if (dishesReceived) {
+                        binding.dishesSwipeRefreshLayout.isRefreshing = false
+                    } else {
+                        dishesTagsReceived = true
+                    }
                 }
             }
         }
+
+        binding.dishesSwipeRefreshLayout.setOnRefreshListener {
+            updateDishes()
+        }
+
+        viewModel.getDishes()
+    }
+
+    private fun updateDishes() {
+        dishesReceived = false
+        dishesTagsReceived = false
 
         viewModel.getDishes()
     }

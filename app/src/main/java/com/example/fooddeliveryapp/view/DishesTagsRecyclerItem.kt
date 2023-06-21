@@ -10,11 +10,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fooddeliveryapp.R
 import com.example.fooddeliveryapp.model.dataClasses.OnItemClickListener
+import com.example.fooddeliveryapp.viewModel.MainViewModel
 
 class DishesTagsRecyclerItem(private val dishesTagsList: List<String>,
                              onClickListener: OnItemClickListener,
                              private val context: Context,
-                             private val selectedTag: String):
+                             private val viewModel: MainViewModel):
     RecyclerView.Adapter<DishesTagsRecyclerItem.MyViewHolder>() {
 
     private var mainListener: OnItemClickListener = onClickListener
@@ -39,8 +40,8 @@ class DishesTagsRecyclerItem(private val dishesTagsList: List<String>,
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.tagName.text = dishesTagsList[position]
-        if (dishesTagsList[position] == selectedTag) {
-            checkTagCard(holder)
+        if (dishesTagsList[position] == viewModel.getTag()) {
+            firstCheckTagCard(holder)
         }
 
         holder.tagButton.setOnClickListener {
@@ -49,6 +50,12 @@ class DishesTagsRecyclerItem(private val dishesTagsList: List<String>,
 
             mainListener.onItemClick(dishesTagsList[position])
         }
+    }
+
+    private fun firstCheckTagCard(newCheckTag: MyViewHolder) {
+        newCheckTag.tagName.setTextColor(ContextCompat.getColor(context, R.color.white))
+        newCheckTag.tagButton.setBackgroundColor(ContextCompat.getColor(context, R.color.checked_button))
+        previousSelectedTag = newCheckTag
     }
 
     private fun checkTagCard(newCheckTag: MyViewHolder) {
