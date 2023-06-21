@@ -5,33 +5,30 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.fooddeliveryapp.R
-import com.example.fooddeliveryapp.databinding.FragmentCategoriesBinding
+import com.example.fooddeliveryapp.databinding.FragmentCartBinding
+import com.example.fooddeliveryapp.model.dataClasses.CartItem
 import com.example.fooddeliveryapp.model.dataClasses.Category
 import com.example.fooddeliveryapp.model.dataClasses.Dish
 import com.example.fooddeliveryapp.model.dataClasses.OnItemClickListener
 import com.example.fooddeliveryapp.viewModel.MainViewModel
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import kotlin.math.ceil
 
 
-class CategoriesFragment : Fragment(), OnItemClickListener{
+class CartFragment : Fragment(), OnItemClickListener {
 
-    private val tag = "CategoriesFragment"
-
-    private lateinit var binding: FragmentCategoriesBinding
+    private lateinit var binding: FragmentCartBinding
     private lateinit var viewModel: MainViewModel
     private val dateFormat = SimpleDateFormat("dd MMMM, yyyy", Locale("ru"))
 
@@ -41,7 +38,7 @@ class CategoriesFragment : Fragment(), OnItemClickListener{
         savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentCategoriesBinding.inflate(inflater, container, false)
+        binding = FragmentCartBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
 
         return binding.root
@@ -50,8 +47,6 @@ class CategoriesFragment : Fragment(), OnItemClickListener{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.categorySwipeRefreshLayout.isRefreshing = true
-
         val imageSize = ceil(44 * resources.displayMetrics.density).toInt()
 
         val glideOptions = RequestOptions()
@@ -59,45 +54,28 @@ class CategoriesFragment : Fragment(), OnItemClickListener{
 
         Glide.with(requireContext())
             .load(R.drawable.placeholder).apply(glideOptions)
-            .into(binding.userProfileImageCategories)
+            .into(binding.userProfileImageCart)
 
-        val adapterList: MutableList<Category> = mutableListOf()
-        val myAdapter = CategoryRecyclerItem(adapterList, requireContext(), this)
-        binding.categoryRecyclerView.adapter = myAdapter
+        val myAdapter = CartRecyclerItem(viewModel , viewModel.getCartList(), this, requireContext())
+        binding.cartRecyclerView.adapter = myAdapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.categoriesStateFlow.collect { categoriesList ->
-                    adapterList.clear()
-
-                    if (categoriesList != null) {
-                        adapterList.addAll(categoriesList)
-                    }
-
-                    myAdapter.notifyDataSetChanged()
-                    binding.categorySwipeRefreshLayout.isRefreshing = false
-                }
+        var summaryPrice = 0
+        val cartList = viewModel.getCartList()
+        for (i in cartList.indices) {
+            val tempDish = viewModel.getDishById(cartList[i].id)
+            if (tempDish != null) {
+                summaryPrice += tempDish.price
             }
         }
-
-        viewModel.getCategories()
-
-        binding.categorySwipeRefreshLayout.setOnRefreshListener {
-            updateCategories()
-        }
+        val numberFormat = NumberFormat.getNumberInstance(Locale("ru", "RU"))
+        val formattedPrice = numberFormat.format(summaryPrice)
+        binding.payButtonCart.text = "Оплатить ${formattedPrice} ₽"
 
         val calendar = Calendar.getInstance()
-        binding.currentDateCategories.text = dateFormat.format(calendar.time)
-    }
-
-    private fun updateCategories() {
-        viewModel.getCategories()
-        val calendar = Calendar.getInstance()
-        binding.currentDateCategories.text = dateFormat.format(calendar.time)
+        binding.currentDateCart.text = dateFormat.format(calendar.time)
     }
 
     override fun onItemClick(category: Category) {
-        findNavController().navigate(R.id.action_categoriesFragment_to_foodsFragment)
     }
 
     override fun onItemClick(dish: Dish) {

@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         app:menu="@menu/bottom_navigation_menu"
         style="@style/MyBottomAppBar"
+        android:clickable="true"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

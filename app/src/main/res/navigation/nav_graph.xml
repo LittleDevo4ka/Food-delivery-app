@@ -6,6 +6,21 @@
     app:startDestination="@id/mainFragment">
 
     <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.fooddeliveryapp.view.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.fooddeliveryapp.view.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_cart" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.fooddeliveryapp.view.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.fooddeliveryapp.view.MainFragment"
         android:label="fragment_main"

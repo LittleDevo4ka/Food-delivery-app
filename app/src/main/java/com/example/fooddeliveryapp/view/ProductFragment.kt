@@ -55,8 +55,8 @@ class ProductFragment : DialogFragment() {
 
         if (dish != null) {
             binding.productName.text = dish.name
-            binding.productPrice.text = dish.price.toString()
-            binding.productWeight.text = "·${dish.weight}г"
+            binding.productPrice.text = "${dish.price} ₽"
+            binding.productWeight.text = " · ${dish.weight}г"
             binding.productDescription.text = dish.description
 
             binding.addProductCartButton.setOnClickListener {

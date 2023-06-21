@@ -57,6 +57,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application), R
         } else {
             mutableListOf()
         }
+
+        getDishes()
     }
 
     fun getCategories() {
@@ -160,16 +162,37 @@ class MainViewModel(application: Application) : AndroidViewModel(application), R
         return
     }
 
+
+
     fun removeCardItem(id: Int) {
         for (i in cartList.indices) {
             if (cartList[i].id == id) {
-                cartList[i].amount--
+                if (cartList[i].amount == 1) {
+                    cartList.removeAt(i)
+                    sharedPreferences.edit().putString("cartList", gson.toJson(cartList)).apply()
+                } else {
+                    cartList[i].amount--
+                    sharedPreferences.edit().putString("cartList", gson.toJson(cartList)).apply()
+                }
                 return
             }
         }
     }
 
+    fun getDishById(id: Int): Dish? {
+        for (i in allDishesList.indices) {
+            if (allDishesList[i].id == id) {
+                return allDishesList[i]
+            }
+        }
+        return null
+    }
+
     fun soutCart() {
         println("Result:\n" + gson.toJson(cartList))
+    }
+
+    fun getCartList(): MutableList<CartItem> {
+        return cartList
     }
 }

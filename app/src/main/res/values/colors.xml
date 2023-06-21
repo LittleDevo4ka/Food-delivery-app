@@ -18,4 +18,6 @@
     <color name="checked_button">#3364E0</color>
     <color name="unchecked_button">#F8F7F5</color>
 
+    <color name="container_color">#EFEEEC</color>
+
 </resources>
