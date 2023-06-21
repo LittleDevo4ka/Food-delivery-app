@@ -5,6 +5,8 @@ import com.example.fooddeliveryapp.BuildConfig
 import com.example.fooddeliveryapp.model.Repository
 import com.example.fooddeliveryapp.model.dataClasses.Categories
 import com.example.fooddeliveryapp.model.dataClasses.Category
+import com.example.fooddeliveryapp.model.dataClasses.Dish
+import com.example.fooddeliveryapp.model.dataClasses.Dishes
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -47,5 +49,29 @@ class FoodAPIService(private val repository: Repository) {
 
     fun sendCategories(data: List<Category>?, code: Int) {
         repository.sendCategories(data, code)
+    }
+
+    fun getDishes() {
+        val call = retrofit.getDishes(BuildConfig.baseDishesURL)
+        call.enqueue(object: Callback<Dishes>{
+            override fun onResponse(call: Call<Dishes>, response: Response<Dishes>) {
+                if (response.isSuccessful) {
+                    Log.i(tag, "getDishes: everything went well: ${response.code()}")
+                    sendDishes(response.body()?.dishes, response.code())
+                } else {
+                    Log.w(tag, "getDishes: something went wrong: ${response.code()}")
+                    sendDishes(null, response.code())
+                }
+            }
+
+            override fun onFailure(call: Call<Dishes>, t: Throwable) {
+                Log.w(tag, "getDishes: something really went wrong: ${t.message}")
+                sendDishes(null, 400)
+            }
+        })
+    }
+
+    fun sendDishes(data: List<Dish>?, code: Int) {
+        repository.sendDishes(data, code)
     }
 }

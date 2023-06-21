@@ -21,6 +21,7 @@ android {
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
         buildConfigField "String", "baseCategoriesURL", "\"${properties.getProperty("baseCategoriesURL")}\""
+        buildConfigField "String", "baseDishesURL", "\"${properties.getProperty("baseDishesURL")}\""
     }
 
     buildTypes {

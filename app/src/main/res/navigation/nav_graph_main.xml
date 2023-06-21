@@ -18,9 +18,9 @@
     </fragment>
     <fragment
         android:id="@+id/foodsFragment"
-        android:name="com.example.fooddeliveryapp.view.FoodsFragment"
+        android:name="com.example.fooddeliveryapp.view.DishesFragment"
         android:label="fragment_foods"
-        tools:layout="@layout/fragment_foods" >
+        tools:layout="@layout/fragment_dishes" >
         <action
             android:id="@+id/action_foodsFragment_to_categoriesFragment"
             app:destination="@id/categoriesFragment"
